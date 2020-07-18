@@ -8,8 +8,8 @@ import * as request from 'supertest'
 import { createConnection, getConnection } from 'typeorm'
 
 // App
-import { AppController } from './app/app.controller'
-import { User } from './app/entities'
+import { AppController } from '../app/app.controller'
+import { User } from '../app/entities'
 
 // Define a group of tests.
 describe('The server', () => {
@@ -32,13 +32,10 @@ describe('The server', () => {
     // Define a nested group of tests.
     describe('on GET /api/todos requests', () => {
         it('should return a 400 status if the user did not signed in.', () => {
-            return request(app)
-                .get('/api/todos')
-                .expect(400)
-                .expect({
-                    code: 'invalid_request',
-                    description: 'Session cookie not found.'
-                })
+            return request(app).get('/api/todos').expect(400).expect({
+                code: 'invalid_request',
+                description: 'Session cookie not found.'
+            })
         })
 
         it('should return a 200 status if the user did signed in.', async () => {
