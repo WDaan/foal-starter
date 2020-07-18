@@ -12,25 +12,22 @@ import {
     TokenRequired
 } from '@foal/core'
 import { getRepository } from 'typeorm'
-import { fetchUser, TypeORMStore } from '@foal/typeorm'
 
 import { Todo, User } from '../entities'
+import { JWTRequired } from '@foal/jwt'
+import { JWTRefresh } from '../hooks'
+import { fetchUser } from '@foal/typeorm'
 
-@TokenRequired({
-    cookie: true,
-    store: TypeORMStore,
-    // Make ctx.user be an instance of User.
-    user: fetchUser(User),
-    redirectTo: '/signin'
-})
+@JWTRequired({ user: fetchUser(User) })
+@JWTRefresh()
 export class TodoController {
-    @Get('/todos')
+    @Get('/')
     async getTodos(ctx: Context) {
         const todos = await getRepository(Todo).find({ user: ctx.user })
         return new HttpResponseOK(todos)
     }
 
-    @Post('/todos')
+    @Post('/')
     @ValidateBody({
         additionalProperties: false,
         properties: {
@@ -50,7 +47,7 @@ export class TodoController {
         return new HttpResponseCreated(todo)
     }
 
-    @Delete('/todos/:id')
+    @Delete('/:id')
     @ValidatePathParam('id', { type: 'number' })
     async deleteTodo(ctx: Context) {
         const todo = await getRepository(Todo).findOne({
@@ -62,6 +59,9 @@ export class TodoController {
             return new HttpResponseNotFound()
         }
         await getRepository(Todo).remove(todo)
-        return new HttpResponseNoContent()
+        return new HttpResponseOK({
+            todo,
+            message: 'Todo deleted succesfully'
+        })
     }
 }

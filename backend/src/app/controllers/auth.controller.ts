@@ -2,24 +2,20 @@
 import {
     Context,
     dependency,
-    HttpResponseRedirect,
     Post,
-    removeSessionCookie,
     Session,
-    setSessionCookie,
-    TokenRequired,
     ValidateBody,
-    verifyPassword
+    verifyPassword,
+    HttpResponseOK,
+    HttpResponseUnauthorized
 } from '@foal/core'
-import { TypeORMStore } from '@foal/typeorm'
+import { JWTRequired } from '@foal/jwt'
 import { getRepository } from 'typeorm'
 
 import { User } from '../entities'
+import { JWTSign } from '../helpers'
 
 export class AuthController {
-    @dependency
-    store: TypeORMStore
-
     @Post('/login')
     // Validate the request body.
     @ValidateBody({
@@ -37,41 +33,34 @@ export class AuthController {
         })
 
         if (!user) {
-            // Redirect the user to /signin if the authentication fails.
-            return new HttpResponseRedirect('/signin?bad_credentials=true')
+            return new HttpResponseUnauthorized({
+                message: "User doesn't exist"
+            })
         }
 
         if (!(await verifyPassword(ctx.request.body.password, user.password))) {
-            // Redirect the user to /signin if the authentication fails.
-            return new HttpResponseRedirect('/signin?bad_credentials=true')
+            return new HttpResponseUnauthorized({
+                message: 'Invalid password'
+            })
         }
 
-        // Create a session associated with the user.
-        const session = await this.store.createAndSaveSessionFromUser(user)
+        // Create a token associated with the user.
+        const token = JWTSign(user.id, user.email)
 
-        // Redirect the user to the home page on success.
-        const response = new HttpResponseRedirect('/')
-        // Save the session token in a cookie in order to authenticate
-        // the user in future requests.
-        setSessionCookie(response, session.getToken())
-        return response
+        return new HttpResponseOK({
+            message: 'Logged in succesfully!',
+            token
+        })
     }
 
     @Post('/logout')
-    @TokenRequired({
-        cookie: true,
-        extendLifeTimeOrUpdate: false,
-        redirectTo: '/signin',
-        store: TypeORMStore
-    })
+    @JWTRequired()
     async logout(ctx: Context<User, Session>) {
-        // Destroy the user session.
-        await this.store.destroy(ctx.session.sessionID)
-
-        // Redirect the user to the home page on success.
-        const response = new HttpResponseRedirect('/signin')
-        // Remove the cookie where the session token is stored.
-        removeSessionCookie(response)
+        const response = new HttpResponseOK({
+            message: 'Logged out succesfully!'
+        })
+        //todo add token to redis blacklist
+        //todo #2 cleanup expired jwt tokens
         return response
     }
 }

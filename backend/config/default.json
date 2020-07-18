@@ -4,10 +4,7 @@
         "csrf": false,
         "debug": false,
         "loggerFormat": "tiny",
-        "staticPath": "public/",
-        "session": {
-            "secret": "qTjVLR3uaaxAjMePsyvWLovh7Nsgw470MTkmzvoDL3o="
-        }
+        "staticPath": "public/"
     },
     "database": {
         "host": "localhost",

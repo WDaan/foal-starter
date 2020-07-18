@@ -5,8 +5,8 @@
         "debug": true,
         "loggerFormat": "dev",
         "staticPath": "public/",
-        "session": {
-            "secret": "qTjVLR3uaaxAjMePsyvWLovh7Nsgw470MTkmzvoDL3o="
+        "jwt": {
+            "secretOrPublicKey": "qTjVLR3uaaxAjMePsyvWLovh7Nsgw470MTkmzvoDL3o="
         }
     },
     "database": {
