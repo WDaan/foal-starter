@@ -3,14 +3,6 @@
     "settings": {
         "csrf": false,
         "debug": false,
-        "loggerFormat": "tiny",
-        "staticPath": "public/"
-    },
-    "database": {
-        "host": "localhost",
-        "port": 3306,
-        "username": "dev",
-        "password": "dev",
-        "database": "foal"
+        "loggerFormat": "tiny"
     }
 }

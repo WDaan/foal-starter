@@ -11,6 +11,7 @@ FROM node:lts-alpine  as production-stage
 
 WORKDIR /app
 COPY --from=build-stage ./app/build ./build
+COPY ormconfig.js ./
 COPY package* ./
 RUN npm i --production
 

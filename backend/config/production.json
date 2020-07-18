@@ -4,10 +4,12 @@
         "csrf": false,
         "debug": false,
         "loggerFormat": "tiny",
-        "staticPath": "public/"
+        "jwt": {
+            "secretOrPublicKey": "qTjVLR3uaaxAjMePsyvWLovh7Nsgw470MTkmzvoDL3o="
+        }
     },
     "database": {
-        "host": "localhost",
+        "host": "0.0.0.0",
         "port": 3306,
         "username": "dev",
         "password": "dev",
