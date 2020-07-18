@@ -1,0 +1,19 @@
+{
+    "port": 3001,
+    "settings": {
+        "csrf": false,
+        "debug": true,
+        "loggerFormat": "dev",
+        "staticPath": "public/",
+        "session": {
+            "secret": "qTjVLR3uaaxAjMePsyvWLovh7Nsgw470MTkmzvoDL3o="
+        }
+    },
+    "database": {
+        "host": "localhost",
+        "port": 3306,
+        "username": "dev",
+        "password": "dev",
+        "database": "foal"
+    }
+}

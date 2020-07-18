@@ -1,0 +1,12 @@
+{
+    "settings": {
+        "loggerFormat": "none"
+    },
+    "database": {
+        "host": "localhost",
+        "port": 3307,
+        "username": "dev",
+        "password": "dev",
+        "database": "foal_test"
+    }
+}
