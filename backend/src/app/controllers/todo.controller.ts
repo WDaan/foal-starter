@@ -3,13 +3,12 @@ import {
     Delete,
     Get,
     HttpResponseCreated,
-    HttpResponseNoContent,
+    Put,
     HttpResponseNotFound,
     HttpResponseOK,
     Post,
     ValidateBody,
-    ValidatePathParam,
-    TokenRequired
+    ValidatePathParam
 } from '@foal/core'
 import { getRepository } from 'typeorm'
 
@@ -24,6 +23,16 @@ export class TodoController {
     @Get('/')
     async getTodos(ctx: Context) {
         const todos = await getRepository(Todo).find({ user: ctx.user })
+        return new HttpResponseOK(todos)
+    }
+
+    @Get('/deleted')
+    async getDeletedTodos(ctx: Context) {
+        const todos = await getRepository(Todo)
+            .createQueryBuilder('todo')
+            .where('userId = :id', { id: ctx.user.id })
+            .getMany()
+
         return new HttpResponseOK(todos)
     }
 
@@ -58,10 +67,28 @@ export class TodoController {
         if (!todo) {
             return new HttpResponseNotFound()
         }
-        await getRepository(Todo).remove(todo)
+        await getRepository(Todo).softDelete(todo.id)
         return new HttpResponseOK({
             todo,
             message: 'Todo deleted succesfully'
+        })
+    }
+
+    @Put('/:id/restore')
+    @ValidatePathParam('id', { type: 'number' })
+    async restoreTodo(ctx: Context) {
+        const todo = await getRepository(Todo).findOne({
+            id: +ctx.request.params.id,
+            // Do not return the todo if it does not belong to the current user.
+            user: ctx.user
+        })
+        if (!todo) {
+            return new HttpResponseNotFound()
+        }
+        await getRepository(Todo).restore(todo.id)
+        return new HttpResponseOK({
+            todo,
+            message: 'Todo restored succesfully'
         })
     }
 }
