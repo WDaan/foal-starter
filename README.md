@@ -4,8 +4,6 @@
 
 The Foal Ts Todo starter but with JWT auth && full frontend written in Vuejs.
 
-//TODO fix docker & docker-compose
-
 ## About Project
 
 - Typescript
