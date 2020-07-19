@@ -4,13 +4,23 @@ services:
     build: ./backend
     container_name: backend
     restart: unless-stopped
+    environment:
+      - NODE_ENV=production
     ports:
       - 3001:3001
+    networks:
+      - dev
+
   frontend:
     build: ./frontend
     container_name: frontend
     restart: unless-stopped
-    environment:
-      - NODE_ENV=production
     ports:
       - 3000:80
+    networks:
+      - dev
+
+networks:
+  dev:
+    external:
+      name: woofy
