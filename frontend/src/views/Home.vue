@@ -6,10 +6,7 @@
                 <div class="row" v-for="todo in todos" :key="todo.id">
                     <div class="text">{{ todo.text }}</div>
                     <div class="checkbox-wrapper">
-                        <input
-                            type="checkbox"
-                            v-on:click="deleteTodo(todo, $event)"
-                        />
+                        <input type="checkbox" v-on:click="deleteTodo(todo, $event)" />
                     </div>
                 </div>
             </div>
@@ -24,14 +21,12 @@
             </div>
         </div>
 
-        <div class="form-group error text-center" v-if="error">
-            {{ error }}
-        </div>
+        <div class="form-group error text-center" v-if="error">{{ error }}</div>
     </div>
 </template>
 
 <script>
-import axios from 'axios'
+import axios from '../axios'
 import { mapGetters } from 'vuex'
 export default {
     name: 'Home',
@@ -49,8 +44,8 @@ export default {
     },
 
     methods: {
-        deleteTodo(todo) {
-            axios.delete('/api/todos/' + todo.id, this.header)
+        async deleteTodo(todo) {
+            await axios.delete('/api/todos/' + todo.id, this.header)
             this.fetchTodos()
         },
         async addNewTodo() {
@@ -67,8 +62,9 @@ export default {
             this.fetchTodos()
         },
         async fetchTodos() {
-            const { data } = await axios.get('/api/todos', this.header)
-            this.todos = data
+            const res = await axios.get('/api/todos', this.header)
+            this.$store.commit('SET_AUTH', { token: res.headers.new_authorization })
+            this.todos = res.data
         }
     },
 

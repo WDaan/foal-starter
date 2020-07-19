@@ -9,7 +9,7 @@ export function JWTRefresh(): HookDecorator {
 
         return (response: HttpResponse) => {
             const newToken = JWTSign(ctx.user.id, ctx.user.email)
-            response.setHeader('Authorization', newToken)
+            response.setHeader('New_Authorization', newToken)
         }
     })
 }

@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import axios from 'axios'
+import axios from './axios'
 
 Vue.use(Vuex)
 
@@ -27,6 +27,7 @@ export default new Vuex.Store({
     mutations: {
         SET_AUTH(state, { token }) {
             state.token = token
+            if (token) Vue.$cookies.set('token', token, '15min')
         }
     },
     actions: {

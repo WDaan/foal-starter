@@ -18,6 +18,13 @@ The Foal Ts Todo starter but with JWT auth && full frontend written in Vuejs.
 
 - JWT
 
+
+## Configuration
+
+- frontend/nginx.conf => to change the backend location (production)
+- backend/config => database credentials
+
+
 ## Installation
 
 #### - installing and running the project
@@ -66,5 +73,11 @@ docker-compose up --build
 
 ```
 docker build . -t web
+
+```
+#### - docker-compose
+
+```
+docker-compose up --build
 
 ```
